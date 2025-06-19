@@ -1,8 +1,11 @@
 using UnityEngine;
 namespace CS
 {
-    public class PlayerUnit
-    {
+    public class PlayerUnit : IUnit , IWeaponUser
+    { 
 
+        public float Power => 3;
+         
+         
     }
 }

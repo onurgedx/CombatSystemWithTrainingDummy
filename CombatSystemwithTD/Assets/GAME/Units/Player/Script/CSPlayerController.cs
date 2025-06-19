@@ -8,6 +8,7 @@ namespace CS
 {
     public class CSPlayerController : MonoBehaviour
     {
+        [SerializeField] private BattleSystem _battleSystem;
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Animator _animator;
         [SerializeField] private float _movementSpeed;
@@ -17,29 +18,39 @@ namespace CS
         private CSPlayerMovementHandler _playerMovementHandler;
         private CSPlayerInputInterpreter _inputInterpreter;
         private CSPlayerCameraHandler _cameraHandler;
-          
-        
 
         [SerializeField] private Transform _lockOnTransform;
 
-        //private CSCamera
+        private Weapon _weapon;
+        [SerializeField] private WeaponBehaviour _weaponBehavior;
+
 
         private bool _isLockOn = false;
 
+        private PlayerUnit _playerUnit;
+
+
         void Start()
         {
-            
+            _playerUnit = new PlayerUnit();
+            _weapon = new GreatSword();
+            _weaponBehavior.Init(_weapon);
+            _weapon.OnHit += Weapon_HitACollider;
             _playerMovementHandler = new CSPlayerMovementHandler(_characterController, _movementSpeed);
             _playerAnimationHandler = new CSPlayerAnimationHandler(_animator);
             _inputInterpreter = new CSPlayerInputInterpreter();
-            _cameraHandler = new CSPlayerCameraHandler(_cameraMixing,this);
-            Configurations();  
-            
+            _cameraHandler = new CSPlayerCameraHandler(_cameraMixing, this);
+            Configurations();
+
         }
 
+        private void Weapon_HitACollider(Collider collider)
+        {
+            _battleSystem.AttemptDamage(collider, _playerUnit, _weapon );
+        }
 
         private void Update()
-        { 
+        {
             _playerMovementHandler.Move();
             _playerAnimationHandler.Update();
             if (_isLockOn)
@@ -49,20 +60,29 @@ namespace CS
         }
 
 
-
         private void Configurations()
         {
-            _inputInterpreter.OnMoved += _playerMovementHandler.SetMoveDirection;
-            _inputInterpreter.OnMoved += _playerAnimationHandler.SetDestinationMovement;
-            _inputInterpreter.AttackRequested += _playerAnimationHandler.Attack;
+            _inputInterpreter.OnMoved += Movement;
+            _inputInterpreter.AttackRequested += Attack;
             _inputInterpreter.OnLockStateChangeRequest += ChangeLockState;
             _inputInterpreter.OnLookRequest += RotatePlayer;
+        }
+
+
+        private void Movement(Vector2 moveDirection)
+        {
+            _playerMovementHandler.SetMoveDirection(moveDirection);
+            _playerAnimationHandler.SetDestinationMovement(moveDirection);
+        }
+
+        private void Attack()
+        {
+            _playerAnimationHandler.Attack();
         }
 
         private void RotatePlayer(Vector2 rotateValue)
         {
             _playerMovementHandler.RotatePlayer(rotateValue.x);
-
         }
 
         private void ChangeLockState()
@@ -79,6 +99,20 @@ namespace CS
                 _cameraHandler.DeactivateLockState();
                 _playerAnimationHandler.DeactivateLockOnState();
             }
+        }
+
+
+        public void ActivateWeaponDamage()
+        {
+            Debug.Log(" weapon damage activated ");
+            _weapon.ActivateDamage();
+        }
+
+
+        public void DeactivateWeaponDamage()
+        {
+            Debug.Log(" weapon damage deactivated ");
+            _weapon.DeactivateDamage();
         }
 
 
