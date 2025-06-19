@@ -1,5 +1,7 @@
 
 using System;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CS
 {
@@ -14,8 +16,13 @@ namespace CS
         public event Action Dead = delegate { };
         public event Action Revived = delegate { };
 
-        public Dummy(float health ,float reviveDuration)
+        public bool IsDead { get; private set; }
+
+        public Vector3 Position { get; private set; }
+
+        public Dummy(float health ,float reviveDuration,Vector3 position)
         {
+            Position = position;
             _maxHealth = health;
             _health = health;
             ReviveDuration = reviveDuration;
@@ -30,12 +37,15 @@ namespace CS
 
         public void Die()
         {
+            IsDead = true;
             Dead.Invoke();
+
         }
 
 
         public void Revive()
         {   
+            IsDead = false;
             _health = _maxHealth;
             Revived.Invoke();
         }

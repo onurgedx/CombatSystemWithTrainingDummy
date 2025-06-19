@@ -1,6 +1,8 @@
+using System.Collections;
 using UnityEngine;
 namespace CS
 {
+    [DefaultExecutionOrder(19)]
     public class DummyBehaviour : MonoBehaviour   
     {
 
@@ -18,7 +20,7 @@ namespace CS
         
         private void Start()
         {
-            _dummy = new Dummy(_dummyHealth, _dummyReviveDuration);
+            _dummy = new Dummy(_dummyHealth, _dummyReviveDuration,transform.position+Vector3.up);
 
             _dummy.Damaged += GetDamaged;
             _dummy.Dead += Die;
@@ -40,6 +42,12 @@ namespace CS
         {
             _healthBarFrame.Hide();
             _animator.SetBool(_deadAnimationHash, true);
+            StartCoroutine(reviceIEnumerator());
+            IEnumerator reviceIEnumerator()
+            {
+                yield return new WaitForSeconds(_dummy.ReviveDuration);
+                _dummy.Revive();
+            }
         }
 
 

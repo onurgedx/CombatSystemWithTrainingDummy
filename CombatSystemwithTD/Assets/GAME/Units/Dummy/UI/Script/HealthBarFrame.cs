@@ -18,18 +18,21 @@ namespace CS
 
         private void LateUpdate()
         {
-             transform.rotation = Quaternion.LookRotation(_mainCam.transform.position - transform.position);
+             transform.rotation = Quaternion.LookRotation(transform.position - _mainCam.transform.position);
         }
 
         public void Configure(float healthMax)
         {
             _slider.maxValue = healthMax;
+            _slider.value = healthMax;
             _slider.minValue = 0;
         }
 
 
         public void UpdateHealthBar(float health)
         {
+            if (!gameObject.activeInHierarchy) return;
+
             float timeCounter = 0;
             StopAllCoroutines();
             StartCoroutine(updateHealthBarOverTime());
@@ -37,7 +40,7 @@ namespace CS
             {
                 while (timeCounter < 1)
                 {
-                    timeCounter += Time.deltaTime * 20;
+                    timeCounter += Time.deltaTime * 10;
                     _slider.value = Mathf.Lerp(_slider.value, health, timeCounter);
                     yield return null;
                 }

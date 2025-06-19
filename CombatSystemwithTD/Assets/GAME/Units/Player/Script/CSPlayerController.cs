@@ -20,15 +20,10 @@ namespace CS
         private CSPlayerCameraHandler _cameraHandler;
 
         [SerializeField] private Transform _lockOnTransform;
-
         private Weapon _weapon;
         [SerializeField] private WeaponBehaviour _weaponBehavior;
-
-
         private bool _isLockOn = false;
-
         private PlayerUnit _playerUnit;
-
 
         void Start()
         {
@@ -44,10 +39,12 @@ namespace CS
 
         }
 
+
         private void Weapon_HitACollider(Collider collider)
         {
             _battleSystem.AttemptDamage(collider, _playerUnit, _weapon );
         }
+
 
         private void Update()
         {
@@ -75,15 +72,21 @@ namespace CS
             _playerAnimationHandler.SetDestinationMovement(moveDirection);
         }
 
+
         private void Attack()
         {
-            _playerAnimationHandler.Attack();
+            if (_isLockOn)
+            {
+                _playerAnimationHandler.Attack();
+            }
         }
+
 
         private void RotatePlayer(Vector2 rotateValue)
         {
             _playerMovementHandler.RotatePlayer(rotateValue.x);
         }
+
 
         private void ChangeLockState()
         {
@@ -103,21 +106,14 @@ namespace CS
 
 
         public void ActivateWeaponDamage()
-        {
-            Debug.Log(" weapon damage activated ");
+        { 
             _weapon.ActivateDamage();
         }
 
 
         public void DeactivateWeaponDamage()
-        {
-            Debug.Log(" weapon damage deactivated ");
+        { 
             _weapon.DeactivateDamage();
         }
-
-
-
-
-
     }
 }
