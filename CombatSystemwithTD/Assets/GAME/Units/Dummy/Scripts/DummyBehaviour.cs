@@ -1,33 +1,36 @@
 using System.Collections;
 using UnityEngine;
 namespace CS
-{
-    [DefaultExecutionOrder(19)]
+{ 
     public class DummyBehaviour : MonoBehaviour   
     {
-
-        private Dummy _dummy;
-
 
         private static readonly int _hitAnimationHash = Animator.StringToHash("Hit");
         private static readonly int _deadAnimationHash = Animator.StringToHash("Dead");
 
         public Collider Collider => _collider;
-
         [SerializeField] private HealthBarFrame _healthBarFrame;
         [SerializeField] private Collider _collider;
         [SerializeField] private Animator _animator;  
         [SerializeField] private float _dummyReviveDuration;
          
+        private Dummy _dummy;
+
         public void Init(Dummy dummy)
         {
+            if(_dummy != null)
+            {
+                _dummy.Damaged -= GetDamaged;
+                dummy.Dead-= Die;
+                _dummy.Revived -= Revive;
+            }
             _dummy = dummy;
             _dummy.Damaged += GetDamaged;
             _dummy.Dead += Die;
             _dummy.Revived += Revive;
             _healthBarFrame.Configure(_dummy.Health);
-
         }
+
 
         private void GetDamaged()
         {
@@ -39,15 +42,8 @@ namespace CS
         public void Die()
         {
             _healthBarFrame.Hide();
-            _animator.SetBool(_deadAnimationHash, true);
-            StartCoroutine(reviceIEnumerator());
-            IEnumerator reviceIEnumerator()
-            {
-                yield return new WaitForSeconds(_dummy.ReviveDuration);
-                _dummy.Revive();
-            }
+            _animator.SetBool(_deadAnimationHash, true); 
         }
-
 
         public void Revive()
         {

@@ -39,7 +39,6 @@ namespace CS
         {
             IsDead = true;
             Dead.Invoke();
-
         }
 
 
