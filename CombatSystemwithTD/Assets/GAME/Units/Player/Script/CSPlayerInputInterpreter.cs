@@ -18,12 +18,10 @@ namespace CS
 
 
         public CSPlayerInputInterpreter()
-        {
-            Cursor.visible = false;
+        { 
             _inputActions = new CSPlayerInputActions();
             _playerActions = _inputActions.Player;
             _playerActions.AddCallbacks(this);
-
             _playerActions.Enable();
         }
 
@@ -47,8 +45,7 @@ namespace CS
 
 
         public void OnLook(InputAction.CallbackContext context)
-        { 
-            
+        {             
             Vector2 lookInput = context.ReadValue<Vector2>();  
             if (_mousePositionPrevious != lookInput)
             {

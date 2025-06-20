@@ -25,6 +25,7 @@ namespace CS
                 float reviveDuration = 5;
                 Dummy dummy = new Dummy(health, reviveDuration, dummyBehaviour.transform.position + Vector3.up * 1.6f);
                 dummyBehaviour.Init(dummy);
+                //fix here
                 dummy.Dead += async () => 
                 { 
                     await Task.Delay(4000);
