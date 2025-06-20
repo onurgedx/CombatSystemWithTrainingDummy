@@ -9,7 +9,7 @@ namespace CS
         private readonly static int _movementXHash = Animator.StringToHash("MovementX");
         private readonly static int _movementZHash = Animator.StringToHash("MovementZ");
         private readonly static int _lockOn = Animator.StringToHash("LockOn");
-        private readonly static int _attack01 = Animator.StringToHash("Attack01");
+        private readonly static int _attack = Animator.StringToHash("Attack");
          
         private Animator _animator;
 
@@ -76,10 +76,16 @@ namespace CS
             _animator.SetBool(_lockOn, false); 
         }
 
-        public void Attack()
+        public void StartAttack()
         {
-            _animator.SetTrigger(_attack01);
+            _animator.SetBool(_attack ,true); 
         }
+
+        public void EndAttack()
+        {
+            _animator.SetBool(_attack , false);    
+        }
+
 
     }
 }

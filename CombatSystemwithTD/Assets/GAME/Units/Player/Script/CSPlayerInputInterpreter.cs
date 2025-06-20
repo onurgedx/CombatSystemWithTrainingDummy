@@ -9,6 +9,7 @@ namespace CS
         public Action<Vector2> OnLookRequest = delegate { };
         public Action OnLockStateChangeRequest = delegate { };
         public Action AttackRequested = delegate { }; 
+        public Action AttackEndRequested = delegate { }; 
 
         private CSPlayerInputActions _inputActions;
         private CSPlayerInputActions.PlayerActions _playerActions;
@@ -28,6 +29,10 @@ namespace CS
             if (context.phase == InputActionPhase.Started)
             {
                 AttackRequested.Invoke();
+            }
+            else if (context.phase ==InputActionPhase.Canceled)
+            {
+                AttackEndRequested.Invoke();    
             }
         }
 

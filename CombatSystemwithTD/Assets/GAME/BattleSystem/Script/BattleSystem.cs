@@ -23,9 +23,9 @@ namespace CS
         {
             if(_damageblesDictionary.TryGetValue(damagableCollider, out var damageble))
             {
-                OnHit.Invoke(weapon,damageble, weaponUser);
                 float damage = _damageCalculator.CalculateDamage(weapon,weaponUser);
                 damageble.GetDamaged(damage);
+                OnHit.Invoke(weapon,damageble, weaponUser);
                 if(damageble.Health<=0&& damageble is IDeadable deadable)
                 {
                     OnDead.Invoke(deadable);
