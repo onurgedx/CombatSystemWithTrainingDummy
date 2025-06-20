@@ -5,20 +5,17 @@ namespace CS
 {
     public class CSPlayerInputInterpreter : CSPlayerInputActions.IPlayerActions
     {
-        public Action<Vector2> OnMoved = delegate { }; 
+        public Action<Vector2> OnMoved = delegate { };
         public Action<Vector2> OnLookRequest = delegate { };
         public Action OnLockStateChangeRequest = delegate { };
-        public Action AttackRequested = delegate { };
-         
-        private Vector2 _mousePositionPrevious;
-
+        public Action AttackRequested = delegate { }; 
 
         private CSPlayerInputActions _inputActions;
         private CSPlayerInputActions.PlayerActions _playerActions;
 
 
         public CSPlayerInputInterpreter()
-        { 
+        {
             _inputActions = new CSPlayerInputActions();
             _playerActions = _inputActions.Player;
             _playerActions.AddCallbacks(this);
@@ -27,7 +24,7 @@ namespace CS
 
 
         public void OnAttack(InputAction.CallbackContext context)
-        { 
+        {
             if (context.phase == InputActionPhase.Started)
             {
                 AttackRequested.Invoke();
@@ -36,7 +33,7 @@ namespace CS
 
 
         public void OnLockOnOffTarget(InputAction.CallbackContext context)
-        { 
+        {
             if (context.phase == InputActionPhase.Started)
             {
                 OnLockStateChangeRequest.Invoke();
@@ -45,18 +42,14 @@ namespace CS
 
 
         public void OnLook(InputAction.CallbackContext context)
-        {             
-            Vector2 lookInput = context.ReadValue<Vector2>();  
-            if (_mousePositionPrevious != lookInput)
-            {
-                OnLookRequest.Invoke(lookInput- _mousePositionPrevious);
-                _mousePositionPrevious = lookInput;
-            }
+        {
+            Vector2 lookInput = context.ReadValue<Vector2>();
+            OnLookRequest.Invoke(lookInput);
         }
 
 
         public void OnMove(InputAction.CallbackContext context)
-        { 
+        {
             Vector2 moveInput = context.ReadValue<Vector2>();
             OnMoved.Invoke(moveInput);
 

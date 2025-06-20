@@ -17,16 +17,18 @@ namespace CS
 
         private CSPlayerAnimationHandler _playerAnimationHandler;
         private CSPlayerMovementHandler _playerMovementHandler;
-         
+        
 
+        [SerializeField] private Transform _cameraOriginTransform;
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Animator _animator;
         [SerializeField] private float _movementSpeed; 
-
-        [SerializeField] private Transform _lockOnTransform;
+         
         [SerializeField] private WeaponBehaviour _weaponBehavior;
         private Weapon _weapon;
 
+        private float _currentCameraOriginRotateAspect = 0.5f;
+        private float _destinationCameraOriginRotateAspect = 0.5f;
         public bool IsLockOn =>_isLockOn;
         private bool _isLockOn = false;
         private bool _play = false;
@@ -52,7 +54,13 @@ namespace CS
                 _playerMovementHandler.LockRotation();
             }
         }
-        
+
+
+        private void LateUpdate()
+        {
+            _currentCameraOriginRotateAspect = Mathf.Lerp( _currentCameraOriginRotateAspect,_destinationCameraOriginRotateAspect, Time.deltaTime*8);
+            _cameraOriginTransform.localRotation = Quaternion.Slerp(Quaternion.Euler(Vector3.right * -20), Quaternion.Euler(Vector3.right * 20), _currentCameraOriginRotateAspect);
+        }
 
         public void Movement(Vector2 moveDirection)
         {
@@ -69,10 +77,16 @@ namespace CS
             }
         }
 
+       
 
-        public void RotatePlayer(Vector2 rotateValue)
+        public void Rotate(Vector2 rotateValue)
         {
-            _playerMovementHandler.RotatePlayer(rotateValue.x);
+            if (!_isLockOn)
+            {
+                _playerMovementHandler.RotatePlayer(rotateValue.x);
+            }
+            _destinationCameraOriginRotateAspect -= rotateValue.y*Time.deltaTime;
+            _destinationCameraOriginRotateAspect = Mathf.Clamp01(_destinationCameraOriginRotateAspect); 
         }
 
 

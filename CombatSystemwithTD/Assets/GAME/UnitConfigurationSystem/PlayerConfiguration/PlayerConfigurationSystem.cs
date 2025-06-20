@@ -51,7 +51,7 @@ namespace CS
             inputInterpreter.OnMoved += csPlayerController.Movement;
             inputInterpreter.AttackRequested += csPlayerController.Attack;
             inputInterpreter.OnLockStateChangeRequest += csPlayerController.ChangeLockState;
-            inputInterpreter.OnLookRequest += csPlayerController.RotatePlayer;
+            inputInterpreter.OnLookRequest += csPlayerController.Rotate;
         }
          
 
