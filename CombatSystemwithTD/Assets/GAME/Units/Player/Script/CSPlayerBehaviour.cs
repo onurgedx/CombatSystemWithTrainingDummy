@@ -7,25 +7,27 @@ using UnityEngine.InputSystem;
 
 namespace CS
 {
-    public class CSPlayerController : MonoBehaviour 
+    public class CSPlayerBehaviour : MonoBehaviour 
     {
          
         public event Action OnLockState = delegate {}; 
         public event Action OnWeaponActivityOn = delegate { };
         public event Action OnWeaponActivityOff = delegate { };
         public event Action OnFreeLookState = delegate {};
+
+        private CSPlayerAnimationHandler _playerAnimationHandler;
+        private CSPlayerMovementHandler _playerMovementHandler;
          
 
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private Animator _animator;
         [SerializeField] private float _movementSpeed; 
 
-        private CSPlayerAnimationHandler _playerAnimationHandler;
-        private CSPlayerMovementHandler _playerMovementHandler;
-
         [SerializeField] private Transform _lockOnTransform;
         [SerializeField] private WeaponBehaviour _weaponBehavior;
         private Weapon _weapon;
+
+        public bool IsLockOn =>_isLockOn;
         private bool _isLockOn = false;
         private bool _play = false;
                  
@@ -43,7 +45,6 @@ namespace CS
         private void Update()
         {
             if (!_play) return;
-
             _playerMovementHandler.Move();
             _playerAnimationHandler.Update();
             if (_isLockOn)
@@ -51,7 +52,7 @@ namespace CS
                 _playerMovementHandler.LockRotation();
             }
         }
-                 
+        
 
         public void Movement(Vector2 moveDirection)
         {
@@ -75,13 +76,18 @@ namespace CS
         }
 
 
+        public void UpdateLockableTarget(ILockableTarget lockableTarget)
+        {
+            _playerMovementHandler.SetLockableTarget(lockableTarget);
+        }
+
+
         public void ChangeLockState()
         {
             _isLockOn = !_isLockOn;
             if (_isLockOn)
             {
-                OnLockState.Invoke(); 
-                _playerMovementHandler.SetLockTransform(_lockOnTransform); 
+                OnLockState.Invoke();  
                 _playerAnimationHandler.ActivateLockOnState();
             }
             else

@@ -12,24 +12,22 @@ namespace CS
         private static readonly int _hitAnimationHash = Animator.StringToHash("Hit");
         private static readonly int _deadAnimationHash = Animator.StringToHash("Dead");
 
+        public Collider Collider => _collider;
+
         [SerializeField] private HealthBarFrame _healthBarFrame;
         [SerializeField] private Collider _collider;
-        [SerializeField] private Animator _animator; 
-        [SerializeField] private float _dummyHealth;
+        [SerializeField] private Animator _animator;  
         [SerializeField] private float _dummyReviveDuration;
-        
-        private void Start()
+         
+        public void Init(Dummy dummy)
         {
-            _dummy = new Dummy(_dummyHealth, _dummyReviveDuration,transform.position+Vector3.up);
-
+            _dummy = dummy;
             _dummy.Damaged += GetDamaged;
             _dummy.Dead += Die;
             _dummy.Revived += Revive;
+            _healthBarFrame.Configure(_dummy.Health);
 
-            _healthBarFrame.Configure(_dummyHealth);
-            BattleSystem.RecordDamageable(_collider, _dummy);
         }
-
 
         private void GetDamaged()
         {

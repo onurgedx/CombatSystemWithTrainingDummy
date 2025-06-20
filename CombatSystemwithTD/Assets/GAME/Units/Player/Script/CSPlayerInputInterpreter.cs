@@ -9,8 +9,7 @@ namespace CS
         public Action<Vector2> OnLookRequest = delegate { };
         public Action OnLockStateChangeRequest = delegate { };
         public Action AttackRequested = delegate { };
-
-        private Vector2 _movePrevious;
+         
         private Vector2 _mousePositionPrevious;
 
 
@@ -20,7 +19,7 @@ namespace CS
 
         public CSPlayerInputInterpreter()
         {
-
+            Cursor.visible = false;
             _inputActions = new CSPlayerInputActions();
             _playerActions = _inputActions.Player;
             _playerActions.AddCallbacks(this);

@@ -1,3 +1,4 @@
+using CS;
 using UnityEngine;
 
 public class CSPlayerMovementHandler  
@@ -9,7 +10,7 @@ public class CSPlayerMovementHandler
     private Vector3 _destinationMoveDirection;
     private float _rotateSpeed;
 
-    private Transform _lockableTransform;
+    private ILockableTarget _lockableTarget;
 
     public CSPlayerMovementHandler(CharacterController chaController, float movementSpeed)
     {
@@ -30,20 +31,19 @@ public class CSPlayerMovementHandler
     }
 
     public void RotatePlayer(float a_rotateAmount)
-    {
-        //_chaController.transform.Rotate();
+    { 
         _chaController.transform.localRotation = Quaternion.Euler(_chaController.transform.rotation.eulerAngles + Vector3.up * a_rotateAmount * Time.deltaTime * _rotateSpeed);
     }
 
 
-    public void SetLockTransform(Transform lockableTransform)
+    public void SetLockableTarget(ILockableTarget lockableTarget)
     {
-        _lockableTransform = lockableTransform;
+        _lockableTarget = lockableTarget;
     }
 
     public void LockRotation()
     {
-        Vector3 direction = (_lockableTransform.position - _chaController.transform.position);
+        Vector3 direction = (_lockableTarget.Position - _chaController.transform.position);
         direction.y = 0;
         _chaController.transform.rotation = Quaternion.Slerp( _chaController.transform.rotation , Quaternion.LookRotation(direction) ,Time.deltaTime*10);
     }

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace CS
 {
-    public class Dummy : IDummy, IUnit, IDamagable , IDeadable
+    public class Dummy : IDummy, IUnit, IDamagable , IDeadable, ILockableTarget
     {
         public float Health => _health;
         private float _health =100;

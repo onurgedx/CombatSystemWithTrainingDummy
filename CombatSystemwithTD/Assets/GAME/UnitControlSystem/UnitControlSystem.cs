@@ -1,48 +1,48 @@
 using UnityEngine;
 namespace CS
 {
+    [DefaultExecutionOrder(123)]
     public class UnitControlSystem : MonoBehaviour
-    {
-
+    { 
         [SerializeField] private BattleSystem _battleSystem;
         [SerializeField] private CameraSystem _cameraSystem;
         [SerializeField] private CSSoundSystem _soundSystem;
         [SerializeField] private GameplayUISystem _gameplayUISystem;
 
-        [SerializeField] private CSPlayerController _csPlayerController;
+        [SerializeField] private DummyBehaviour[] _dummies;
+
+        [SerializeField] private CSPlayerBehaviour _csPlayerBehaviour;
         private CSPlayerInputInterpreter _inputInterpreter;
 
-
-        private void Start()
-        {
-            _inputInterpreter = new CSPlayerInputInterpreter();
-            ConfigurePlayer(_csPlayerController);
-            StartControllingPlayer(_csPlayerController);
-        }
-
+        private PlayerControlSystem _playerControlSystem;
         
-        private void ConfigurePlayer(CSPlayerController csPlayerController)
-        {
-            PlayerUnit playerUnit = new PlayerUnit();
-            Weapon weapon = new GreatSword();
-            csPlayerController.Init(weapon);
-            weapon.OnHit += (Collider collider) => { _battleSystem.AttemptDamage(collider, playerUnit, weapon); }; 
-            csPlayerController.OnLockState += _cameraSystem.ActivateLockOnState;
-            csPlayerController.OnLockState += _gameplayUISystem.ActivateLockOn;
-            csPlayerController.OnFreeLookState += _gameplayUISystem.DeactivateLockOn;
-            csPlayerController.OnFreeLookState += _cameraSystem.DeactivateLockOnState;
-            csPlayerController.OnWeaponActivityOn += _soundSystem.PlayerBattleCry;
-            csPlayerController.OnWeaponActivityOn += weapon.ActivateDamage;
-            csPlayerController.OnWeaponActivityOff += weapon.DeactivateDamage;            
+         
+        private void Start()
+        { 
+            _inputInterpreter = new CSPlayerInputInterpreter();
+            _playerControlSystem = new PlayerControlSystem(_battleSystem, _cameraSystem, _soundSystem, _gameplayUISystem);
+            _playerControlSystem.Configure(_csPlayerBehaviour);
+            _playerControlSystem.StartControllingPlayer(_csPlayerBehaviour, _inputInterpreter); 
+            ConfigureDummies();
         }
 
+      
 
-        private void StartControllingPlayer(CSPlayerController csPlayerController)
+        private void ConfigureDummies()
         {
-            _inputInterpreter.OnMoved += csPlayerController.Movement;
-            _inputInterpreter.AttackRequested += csPlayerController.Attack;
-            _inputInterpreter.OnLockStateChangeRequest += csPlayerController.ChangeLockState;
-            _inputInterpreter.OnLookRequest += csPlayerController.RotatePlayer;
+            foreach (DummyBehaviour dummyBehaviour in _dummies)
+            {
+                float health = 200;
+                float reviveDuration = 5;
+                Dummy dummy = new Dummy(health, reviveDuration,dummyBehaviour.transform.position + Vector3.up*1.6f);
+                dummyBehaviour.Init(dummy);
+                _battleSystem.RecordDamageable(dummyBehaviour.Collider, dummy);
+
+                if(dummy is ILockableTarget lockableTarget)
+                {
+                    _playerControlSystem.RecordLockableTarget(lockableTarget);
+                }
+            }
         }
     }
 }

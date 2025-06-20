@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace CS
 {
-    public class BattleSystem : MonoBehaviour , IDamager
+    public class BattleSystem : MonoBehaviour 
     {
-        private static  Dictionary<Collider, IDamagable> _damageblesDictionary;
+        private Dictionary<Collider, IDamagable> _damageblesDictionary;
         private DamageCalculator _damageCalculator;
 
         public Action<IDeadable> OnDead = delegate { };
@@ -35,7 +35,7 @@ namespace CS
         }
         
 
-        public static void RecordDamageable(Collider collider, IDamagable damageable)
+        public void RecordDamageable(Collider collider, IDamagable damageable)
         {
             _damageblesDictionary.Add(collider, damageable);
         }
