@@ -19,9 +19,7 @@ namespace CS
                 _sparkGameObject.SetActive(false);
                 _collider.enabled = false; };
         }
-
-        
-        
+                
 
         private void OnTriggerEnter(Collider collider)
         {

@@ -9,7 +9,8 @@ namespace CS
         private DamageCalculator _damageCalculator;
 
         public Action<IDeadable> OnDead = delegate { };
-        public Action<IWeapon,IDamagable> OnHit = delegate { };
+        public Action<IWeapon,IDamagable, IWeaponUser> OnHit = delegate { };
+
 
         private void Start()
         {
@@ -22,7 +23,7 @@ namespace CS
         {
             if(_damageblesDictionary.TryGetValue(damagableCollider, out var damageble))
             {
-                OnHit.Invoke(weapon,damageble);
+                OnHit.Invoke(weapon,damageble, weaponUser);
                 float damage = _damageCalculator.CalculateDamage(weapon,weaponUser);
                 damageble.GetDamaged(damage);
                 if(damageble.Health<=0&& damageble is IDeadable deadable)
@@ -38,7 +39,5 @@ namespace CS
         {
             _damageblesDictionary.Add(collider, damageable);
         }
-
-
     }
 }

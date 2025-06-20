@@ -17,7 +17,7 @@ namespace CS
              
         }
 
-        private void OnHit(IWeapon weapon, IDamagable damagable)
+        private void OnHit(IWeapon weapon, IDamagable damagable,IWeaponUser user)
         {
             Instantiate(_hitBloodSplashVfx.gameObject, damagable.Position,Quaternion.identity);
         }
