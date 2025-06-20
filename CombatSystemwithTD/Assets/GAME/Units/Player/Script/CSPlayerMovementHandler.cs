@@ -16,9 +16,9 @@ public class CSPlayerMovementHandler
     {
         _chaController = chaController;
         _movementSpeed = movementSpeed;
-        _rotateSpeed = 21;
+        _rotateSpeed = 6;
     }
-
+        
     public void SetMoveDirection(Vector2 moveDirection)
     {
         _destinationMoveDirection = new Vector3( moveDirection.x,0,moveDirection.y); 

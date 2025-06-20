@@ -29,6 +29,10 @@ namespace CS
 
         private float _currentCameraOriginRotateAspect = 0.5f;
         private float _destinationCameraOriginRotateAspect = 0.5f;
+        private float _cameraTransitionSpeed = 4f;
+        private float _cameraOriginMaxXAngle = 20;
+        private float _cameraOriginMinXAngle = -20;
+
         public bool IsLockOn => _isLockOn;
         private bool _isLockOn = false;
         private bool _play = false;
@@ -58,8 +62,8 @@ namespace CS
 
         private void LateUpdate()
         {
-            _currentCameraOriginRotateAspect = Mathf.Lerp(_currentCameraOriginRotateAspect, _destinationCameraOriginRotateAspect, Time.deltaTime * 8);
-            _cameraOriginTransform.localRotation = Quaternion.Slerp(Quaternion.Euler(Vector3.right * -20), Quaternion.Euler(Vector3.right * 20), _currentCameraOriginRotateAspect);
+            _currentCameraOriginRotateAspect = Mathf.Lerp(_currentCameraOriginRotateAspect, _destinationCameraOriginRotateAspect, Time.deltaTime * _cameraTransitionSpeed);
+            _cameraOriginTransform.localRotation = Quaternion.Slerp(Quaternion.Euler(Vector3.right * _cameraOriginMinXAngle), Quaternion.Euler(Vector3.right * _cameraOriginMaxXAngle), _currentCameraOriginRotateAspect);
         }
 
         public void Movement(Vector2 moveDirection)
@@ -80,10 +84,8 @@ namespace CS
 
         public void EndAttack()
         {
-            if (_isLockOn)
-            {
-                _playerAnimationHandler.EndAttack();
-            }
+            _playerAnimationHandler.EndAttack();
+             
         }
 
 
@@ -114,6 +116,7 @@ namespace CS
             }
             else
             {
+                EndAttack();
                 OnFreeLookState.Invoke();
                 _playerAnimationHandler.DeactivateLockOnState();
             }

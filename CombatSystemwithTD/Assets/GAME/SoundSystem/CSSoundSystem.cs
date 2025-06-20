@@ -18,9 +18,7 @@ namespace CS
         [SerializeField] private AudioClip _dummyHitAudioClip;
 
         [SerializeField] private AudioClip[] _hitVersionsAudioClip;
-
-        [SerializeField] private AudioClip _stepAudioClip;
-
+         
         [SerializeField] private AudioClip[] _battleCriesAudioClip;
         
 
